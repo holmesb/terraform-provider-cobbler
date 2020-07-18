@@ -3,6 +3,7 @@ package cobbler
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	cobbler "github.com/wearespindle/cobblerclient"
@@ -32,9 +33,12 @@ func resourceTemplateFile() *schema.Resource {
 
 func resourceTemplateFileCreate(d *schema.ResourceData, meta interface{}) error {
 	config := meta.(*Config)
+	filePath := d.Get("name").(string)
+	filePathSplit := strings.Split(filePath, "/")
+	filename := filePathSplit[len(filePathSplit)-1]
 
 	ks := cobbler.TemplateFile{
-		Name: d.Get("name").(string),
+		Name: filename,
 		Body: d.Get("body").(string),
 	}
 
